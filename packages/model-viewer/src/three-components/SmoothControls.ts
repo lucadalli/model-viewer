@@ -182,14 +182,14 @@ export class SmoothControls extends EventDispatcher {
     if (this._interactionEnabled === true) {
       const {element} = this;
 
-      element.removeEventListener('mousemove', this.onMouseMove);
+      self.removeEventListener('mousemove', this.onMouseMove);
       element.removeEventListener('mousedown', this.onMouseDown);
       if (!this._disableZoom) {
         element.removeEventListener('wheel', this.onWheel);
       }
       element.removeEventListener('keydown', this.onKeyDown);
       element.removeEventListener('touchstart', this.onTouchStart);
-      element.removeEventListener('touchmove', this.onTouchMove);
+      self.removeEventListener('touchmove', this.onTouchMove);
 
       self.removeEventListener('mouseup', this.onMouseUp);
       self.removeEventListener('touchend', this.onTouchEnd);
@@ -541,8 +541,7 @@ export class SmoothControls extends EventDispatcher {
 
   private set touchMode(touchMode: TouchMode) {
     this._touchMode = touchMode;
-    const {element} = this;
-    element.removeEventListener('touchmove', this.onTouchMove);
+    self.removeEventListener('touchmove', this.onTouchMove);
     if (touchMode) {
       this._onTouchMove = (event) => {
         touchMode(event);
@@ -551,7 +550,7 @@ export class SmoothControls extends EventDispatcher {
           event.preventDefault();
         }
       };
-      element.addEventListener('touchmove', this.onTouchMove, {passive: false});
+      self.addEventListener('touchmove', this.onTouchMove, {passive: false});
     } else {
       self.removeEventListener('touchend', this.onTouchEnd);
     }
@@ -591,8 +590,7 @@ export class SmoothControls extends EventDispatcher {
 
   private onMouseDown = (event: MouseEvent) => {
     this.onPointerDown(() => {
-      const {element} = this;
-      element.addEventListener('mousemove', this.onMouseMove);
+      self.addEventListener('mousemove', this.onMouseMove);
       self.addEventListener('mouseup', this.onMouseUp, {once: true});
       this.handleSinglePointerDown(event);
     });
@@ -645,7 +643,7 @@ export class SmoothControls extends EventDispatcher {
 
   private onMouseUp =
       (_event: MouseEvent) => {
-        this.element.removeEventListener('mousemove', this.onMouseMove);
+        self.removeEventListener('mousemove', this.onMouseMove);
 
         this.onPointerUp();
       }
@@ -654,8 +652,7 @@ export class SmoothControls extends EventDispatcher {
       (event: TouchEvent) => {
         const {touches} = event;
         if (touches.length === 0) {
-          const {element} = this;
-          element.removeEventListener('touchmove', this.onTouchMove);
+          self.removeEventListener('touchmove', this.onTouchMove);
           self.removeEventListener('touchend', this.onTouchEnd);
         } else {
           this.onTouchChange(event);
