@@ -537,7 +537,10 @@ export class SmoothControls extends EventDispatcher {
       if ((touchAction === 'pan-y' && dy > dx) ||
           (touchAction === 'pan-x' && dx > dy)) {
         this.touchMode = null;
+        console.log('touchDecided: touchMode = null');
         return;
+      } else {
+        console.log('touchDecided: touchMode = rotate');
       }
     }
     this.handleSinglePointerMove(touches[0]);
@@ -585,6 +588,8 @@ export class SmoothControls extends EventDispatcher {
   private onTouchStart = (event: TouchEvent) => {
     this.onPointerDown(() => {
       if (event.touches.length === 1) {
+        console.log(
+            '---first touch---, touchMode is null:', this.touchMode === null);
         self.addEventListener('touchend', this.onTouchEnd);
         this.touchDecided = false;
       }
@@ -598,10 +603,14 @@ export class SmoothControls extends EventDispatcher {
     switch (touches.length) {
       default:
       case 1:
+        console.log('touches.length === 1');
         this.touchMode = this.touchModeRotate;
         this.handleSinglePointerDown(touches[0]);
         break;
       case 2:
+        console.log(
+            'touches.length === 2, touchMode is null:',
+            this.touchMode === null);
         this.touchMode = this._disableZoom || this.touchMode === null ?
             null :
             this.touchModeZoom;
@@ -636,6 +645,7 @@ export class SmoothControls extends EventDispatcher {
     if (event.touches.length === 0) {
       self.removeEventListener('touchend', this.onTouchEnd);
       this.touchMode = null;
+      console.log('---touch release---');
 
     } else if (this.touchMode !== null) {
       this.onTouchChange(event);
