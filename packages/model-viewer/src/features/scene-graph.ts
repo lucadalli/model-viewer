@@ -55,8 +55,8 @@ export interface SceneGraphInterface {
   scale: string;
   readonly originalGltfJson: GLTF|null;
   exportScene(options?: SceneExportOptions): Promise<Blob>;
-  createTexture(canvas: HTMLCanvasElement): Promise<ModelViewerTexture|null>;
-  createTexture(uri: string, type?: string): Promise<ModelViewerTexture|null>;
+  createTexture(src: string|HTMLCanvasElement, type?: string):
+      Promise<ModelViewerTexture|null>;
 }
 
 /**
@@ -116,12 +116,8 @@ export const SceneGraphMixin = <T extends Constructor<ModelViewerElementBase>>(
       };
     }
 
-    async createTexture(canvas: HTMLCanvasElement):
-        Promise<ModelViewerTexture|null>;
-    async createTexture(uri: string, type?: string):
-        Promise<ModelViewerTexture|null>;
     async createTexture(
-        src: HTMLCanvasElement|string,
+        src: string|HTMLCanvasElement,
         type: string = 'image/png'): Promise<ModelViewerTexture|null> {
       const currentGLTF = this[$currentGLTF];
 
